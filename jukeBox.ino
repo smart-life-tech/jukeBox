@@ -81,7 +81,7 @@ void loop()
             Serial.println(keyBuffer);
             // ***************
             int intKey = atoi(keyBuffer);
-            myDFPlayer.play(intKey);
+            //myDFPlayer.play(intKey);
             // ####################################################
             lcd.setCursor(16, currentDisplayLine);
             lcd.print(" ");                        // overwrite old data
