@@ -81,8 +81,8 @@ void loop()
             Serial.println(keyBuffer);
             // ***************
             int intKey = atoi(keyBuffer);
-            //myDFPlayer.play(intKey);
-            // ####################################################
+            // myDFPlayer.play(intKey);
+            //  ####################################################
             lcd.setCursor(16, currentDisplayLine);
             lcd.print(" ");                        // overwrite old data
             lcd.setCursor(16, currentDisplayLine); // reset cursor
@@ -197,8 +197,13 @@ void loop()
 }
 void playTheList()
 {
+
     static unsigned long timer = 0;
     unsigned long interval = 100;
+    if (digitalRead(busyPin) == 0) // has it gone from low to high?, meaning the track finished
+    {
+        Serial.print("music still playing ");
+    }
     if (millis() - timer >= interval)
     {
         timer = millis();
