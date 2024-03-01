@@ -5,17 +5,16 @@
 #include <hd44780.h> // main hd44780 header
 #include <hd44780ioClass/hd44780_I2Cexp.h>
 hd44780_I2Cexp lcd;
-int row =15;
+int row = 15;
 byte currentSelection = 1; // Tracks the current selection (1st, 2nd, 3rd)
-const byte ROWS = 4; // four rows
-const byte COLS = 4; // three columns
+const byte ROWS = 4;       // four rows
+const byte COLS = 4;       // three columns
 char keys[ROWS][COLS] =
-{
-  {'1', '2', '3', 'A'},
-  {'4', '5', '6', 'B'},
-  {'7', '8', '9', 'C'},
-  {'*', '0', '#', 'D'}
-};
+    {
+        {'1', '2', '3', 'A'},
+        {'4', '5', '6', 'B'},
+        {'7', '8', '9', 'C'},
+        {'*', '0', '#', 'D'}};
 const byte busyPin = 10;
 const byte buttonPin = 8;
 const byte pinLed = 5;
@@ -46,318 +45,323 @@ int sequenceLength = 0;                // Current length of the sequence list
 // Function to add a track to the sequence list
 void addToSequenceList(int trackNumber)
 {
-  if (sequenceLength < MAX_SEQUENCE_LENGTH)
-  {
-    sequenceList[sequenceLength] = trackNumber;
-    sequenceLength++;
-    Serial.print("Track ");
-    Serial.print(trackNumber);
-    Serial.println(" added to sequence list");
-  }
-  else
-  {
-    Serial.println("Sequence list is full");
-  }
+    if (sequenceLength < MAX_SEQUENCE_LENGTH)
+    {
+        sequenceList[sequenceLength] = trackNumber;
+        sequenceLength++;
+        Serial.print("Track ");
+        Serial.print(trackNumber);
+        Serial.println(" added to sequence list");
+    }
+    else
+    {
+        Serial.println("Sequence list is full");
+    }
 }
 
 // Function to play the sequence
 void playSequence()
 {
-  for (int i = 0; i < sequenceLength; i++)
-  {
-    myDFPlayer.playFolder(1, sequenceList[i]); // Assuming track numbers are in folder 1
-    delay(1000);                               // Adjust delay as needed
-  }
+    for (int i = 0; i < sequenceLength; i++)
+    {
+        myDFPlayer.playFolder(1, sequenceList[i]); // Assuming track numbers are in folder 1
+        delay(1000);                               // Adjust delay as needed
+    }
 }
 
 // Function to stop the sequence
 void stopSequence()
 {
-  myDFPlayer.stop();
+    myDFPlayer.stop();
 }
 
 void setup()
 {
-  Serial.begin(115200);
-  Serial.print(F("Enter track number then enter action"));
-  Serial.println(F(" # = ENTER"));
-  Serial.println(F(" * = Play immediate"));
-  Serial.println(F(" A = Add to sequence list"));
-  Serial.println(F(" B = Play sequence"));
-  Serial.println(F("To add track 18 to the list, \"18A\""));
-  Serial.println(F("To play track 3 immediately, \"3*\""));
-  Serial.println(F(" C = STOP sequence"));
-  Serial.println(F("\n\n"));
-  mp3ss.begin(9600);
-  myDFPlayer.begin(mp3ss);
-  myDFPlayer.volume(20);
-  // myDFPlayer.play(3);
-  lcd.begin(20, 4);
-  lcd.clear(); // the only time that you should use clear
-  lcd.print(" Halloween Sounds ");
-  lcd.setCursor(0, 1);
-  lcd.print(" 1st Selection <___> ");
-  lcd.setCursor(0, 2);
-  lcd.print(" 2nd Selection <___>");
-  lcd.setCursor(0, 3);
-  lcd.print(" 3rd Selection <___>");
+    Serial.begin(115200);
+    Serial.print(F("Enter track number then enter action"));
+    Serial.println(F(" # = ENTER"));
+    Serial.println(F(" * = Play immediate"));
+    Serial.println(F(" A = Add to sequence list"));
+    Serial.println(F(" B = Play sequence"));
+    Serial.println(F("To add track 18 to the list, \"18A\""));
+    Serial.println(F("To play track 3 immediately, \"3*\""));
+    Serial.println(F(" C = STOP sequence"));
+    Serial.println(F("\n\n"));
+    mp3ss.begin(9600);
+    myDFPlayer.begin(mp3ss);
+    myDFPlayer.volume(20);
+    // myDFPlayer.play(3);
+    lcd.begin(20, 4);
+    lcd.clear(); // the only time that you should use clear
+    lcd.print(" Halloween Sounds ");
+    lcd.setCursor(0, 1);
+    lcd.print(" 1st Selection <___> ");
+    lcd.setCursor(0, 2);
+    lcd.print(" 2nd Selection <___>");
+    lcd.setCursor(0, 3);
+    lcd.print(" 3rd Selection <___>");
 }
 void loop()
 {
-  if (mode == 0) // check for new key
-  {
-    key = keypad.getKey();
-    if (key)
+    if (mode == 0) // check for new key
     {
-      // Serial.print(F(" key code = "));
-      // Serial.print(key);
-      getEntry(key);
+        key = keypad.getKey();
+        if (key)
+        {
+            // Serial.print(F(" key code = "));
+            // Serial.print(key);
+            getEntry(key);
+        }
+        if (newEntry)
+        {
+            Serial.print(F(" keybuffer = "));
+            Serial.println(keyBuffer);
+            Serial.print("\nnew number entered = ");
+            Serial.println(keyBuffer);
+            // ***************
+            int intKey = atoi(keyBuffer);
+            // myDFPlayer.play(intKey);
+            //  ####################################################
+            lcd.setCursor(16, currentDisplayLine);
+            lcd.print(" ");                        // overwrite old data
+            lcd.setCursor(16, currentDisplayLine); // reset cursor
+            lcd.print(intKey);
+            currentDisplayLine++;
+            if (currentDisplayLine > 3)
+            {
+                currentDisplayLine = 1;
+            }
+            // ###################################################
+            newEntry = false;
+            playList = true;
+            mode = 0;
+        }
+        if (playList)
+        {
+            // playTheList();
+        }
     }
-    if (newEntry)
+    else if (mode == 2) // is it new track
     {
-      Serial.print(F(" keybuffer = "));
-      Serial.println(keyBuffer);
-      Serial.print("\nnew number entered = ");
-      Serial.println(keyBuffer);
-      // ***************
-      int intKey = atoi(keyBuffer);
-      // myDFPlayer.play(intKey);
-      //  ####################################################
-      lcd.setCursor(16, currentDisplayLine);
-      lcd.print(" ");                        // overwrite old data
-      lcd.setCursor(16, currentDisplayLine); // reset cursor
-      lcd.print(intKey);
-      currentDisplayLine++;
-      if (currentDisplayLine > 3)
-      {
-        currentDisplayLine = 1;
-      }
-      // ###################################################
-      newEntry = false;
-      playList = true;
-      mode = 0;
+        // if it is a digit (number) it has to be a track
+        if (isdigit(keyBuffer[0]))
+        {
+            track = atoi(keyBuffer);
+            Serial.print(F("new track "));
+            Serial.println(track);
+            mode = 0;
+        }
+        else
+        {
+            mode = 3;
+        }
     }
-    if (playList)
+    else if (mode == 3) // play immediate
     {
-      //playTheList();
+        if (keyBuffer[0] == '*')
+        {
+            myDFPlayer.play(track);
+            Serial.print(F("Playing "));
+            Serial.print(track);
+            Serial.println(F(" immediate"));
+            mode = 0;
+        }
+        else
+        {
+            mode = 4;
+        }
     }
-  }
-  else if (mode == 2) // is it new track
-  {
-    // if it is a digit (number) it has to be a track
-    if (isdigit(keyBuffer[0]))
+    if (mode == 4) // initialize or add to list
     {
-      track = atoi(keyBuffer);
-      Serial.print(F("new track "));
-      Serial.println(track);
-      mode = 0;
+        if (keyBuffer[0] == 'A')
+        {
+            Serial.print(F("Adding "));
+            Serial.print(track);
+            Serial.print(F(" to list"));
+            trackList[trackIndex] = track;
+            trackIndex++;
+            // keep to the 3 positions
+            if (trackIndex >= 3)
+            {
+                trackIndex = 0;
+            }
+            // how many tracks? up to 3.
+            if (trackIndex > numTracks)
+            {
+                numTracks = trackIndex;
+            }
+            Serial.print(" ");
+            Serial.print(trackList[2]);
+            Serial.print(" ");
+            Serial.print(trackList[1]);
+            Serial.print(" ");
+            Serial.print(trackList[0]);
+            mode = 0;
+        }
+        else
+        {
+            mode = 5;
+        }
     }
-    else
+    else if (mode == 5)
     {
-      mode = 3;
+        if (keyBuffer[0] == 'B') // play list
+        {
+            playList = true;
+            Serial.println(F("PLAY the listed tracks"));
+            // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            lastBusyPinState = 0; // set up to restart the sequence.
+            // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            mode = 0;
+        }
+        else
+        {
+            mode = 6;
+        }
     }
-  }
-  else if (mode == 3) // play immediate
-  {
-    if (keyBuffer[0] == '*')
+    else if (mode == 6)
     {
-      myDFPlayer.play(track);
-      Serial.print(F("Playing "));
-      Serial.print(track);
-      Serial.println(F(" immediate"));
-      mode = 0;
+        if (keyBuffer[0] == 'C') // stop playing list
+        {
+            Serial.println(F("STOP playing tracks"));
+            playList = false;
+            mode = 0;
+        }
+        else
+        {
+            mode = 0;
+        }
     }
-    else
-    {
-      mode = 4;
-    }
-  }
-  if (mode == 4) // initialize or add to list
-  {
-    if (keyBuffer[0] == 'A')
-    {
-      Serial.print(F("Adding "));
-      Serial.print(track);
-      Serial.print(F(" to list"));
-      trackList[trackIndex] = track;
-      trackIndex++;
-      // keep to the 3 positions
-      if (trackIndex >= 3)
-      {
-        trackIndex = 0;
-      }
-      // how many tracks? up to 3.
-      if (trackIndex > numTracks)
-      {
-        numTracks = trackIndex;
-      }
-      Serial.print(" ");
-      Serial.print(trackList[2]);
-      Serial.print(" ");
-      Serial.print(trackList[1]);
-      Serial.print(" ");
-      Serial.print(trackList[0]);
-      mode = 0;
-    }
-    else
-    {
-      mode = 5;
-    }
-  }
-  else if (mode == 5)
-  {
-    if (keyBuffer[0] == 'B') // play list
-    {
-      playList = true;
-      Serial.println(F("PLAY the listed tracks"));
-      // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      lastBusyPinState = 0; // set up to restart the sequence.
-      // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      mode = 0;
-    }
-    else
-    {
-      mode = 6;
-    }
-  }
-  else if (mode == 6)
-  {
-    if (keyBuffer[0] == 'C') // stop playing list
-    {
-      Serial.println(F("STOP playing tracks"));
-      playList = false;
-      mode = 0;
-    }
-    else
-    {
-      mode = 0;
-    }
-  }
-  newEntry = false;
+    newEntry = false;
 }
 void playTheList()
 {
 
-  static unsigned long timer = 0;
-  unsigned long interval = 100;
-  if (digitalRead(busyPin) == 0) // has it gone from low to high?, meaning the track finished
-  {
-    Serial.print("music still playing ");
-  }
-  if (millis() - timer >= interval)
-  {
-    timer = millis();
-    static byte playIndex = 0;
-    // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    bool busyPinState = digitalRead(busyPin); // read the busy pin
-    if (busyPinState != lastBusyPinState)     // has it changed?
+    static unsigned long timer = 0;
+    unsigned long interval = 100;
+    if (digitalRead(busyPin) == 0) // has it gone from low to high?, meaning the track finished
     {
-      if (busyPinState == 1) // has it gone from low to high?, meaning the track finished
-      {
-        Serial.print("play index = ");
-        Serial.println(playIndex);
-        myDFPlayer.play(trackList[playIndex]);
-        playIndex++;        // next track
-        if (playIndex >= 3) // last track?
-        {
-          playIndex = 0;      // reset list
-          keyBuffer[0] = 'C'; // set up for stop mode
-          mode = 6;           // call stop mode
-          playList = false;
-        }
-      }
-      lastBusyPinState = busyPinState; // remember the last busy state
-
-      // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        Serial.print("music still playing ");
     }
-  }
+    if (millis() - timer >= interval)
+    {
+        timer = millis();
+        static byte playIndex = 0;
+        // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        bool busyPinState = digitalRead(busyPin); // read the busy pin
+        if (busyPinState != lastBusyPinState)     // has it changed?
+        {
+            if (busyPinState == 1) // has it gone from low to high?, meaning the track finished
+            {
+                Serial.print("play index = ");
+                Serial.println(playIndex);
+                myDFPlayer.play(trackList[playIndex]);
+                playIndex++;        // next track
+                if (playIndex >= 3) // last track?
+                {
+                    playIndex = 0;      // reset list
+                    keyBuffer[0] = 'C'; // set up for stop mode
+                    mode = 6;           // call stop mode
+                    playList = false;
+                }
+            }
+            lastBusyPinState = busyPinState; // remember the last busy state
+
+            // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        }
+    }
 }
 
 void getEntry(char key)
 {
-  static boolean entryStarted = false;
-  static byte keyBufferIndex = 0;
- // Increment current selection or wrap back to 1
-  if (key == 'A' || key == 'C') {
-    currentSelection++;row=15;
-    if (currentSelection > 3) {
-      currentSelection = 1;
-      
-    }
-  }
-  if (key == 'D')
-  { // Delete last key entry
-    if (keyBufferIndex > 0)
+    static boolean entryStarted = false;
+    static byte keyBufferIndex = 0;
+    // Increment current selection or wrap back to 1
+    if (key == 'A' || key == 'C')
     {
-      Serial.print(F("\t\t"));
-      Serial.print(keyBuffer[keyBufferIndex - 1]);
-      Serial.println(F(" deleted"));
-      keyBufferIndex--;
-      return;
+        currentSelection++;
+        row = 15;
+        if (currentSelection > 3)
+        {
+            currentSelection = 1;
+        }
     }
-  }
-  else if (key == '#')
-  { // End of entry
-    keyBuffer[keyBufferIndex] = '\0';
-    entryStarted = false;
-    newEntry = true;
-  }
-  else if (key == '*' || key == 'A' || key == 'B' || key == 'C')
-  { // Action keys
-    if (keyBufferIndex > 0)
-    { // Check if a track number has been entered
-      switch (key)
-      {
-        case '*':                                      // Play immediate
-           Serial.println(F(" play immediate"));
-          myDFPlayer.playFolder(1, atoi(keyBuffer)); // Assuming track numbers are in folder 1
-          break;
-        case 'A': // Add to sequence list
-         Serial.println(F(" add to list"));
-          addToSequenceList(atoi(keyBuffer));
-          break;
-        case 'B': // Play sequence
-         Serial.println(F(" play the sequence"));
-          playSequence();
-          break;
-        case 'C': // STOP sequence
-         Serial.println(F(" stop the playing"));
-          stopSequence();
-          break;
-        default:
-          break;
-      }
+    if (key == 'D')
+    { // Delete last key entry
+        if (keyBufferIndex > 0)
+        {
+            memset(keyBuffer, 0, sizeof(keyBuffer));
+            keyBufferIndex = 0;
+
+            Serial.print(F("\t\t"));
+            Serial.print(keyBuffer[keyBufferIndex - 1]);
+            Serial.println(F(" deleted"));
+            keyBufferIndex--;
+            return;
+        }
     }
-    // Clear the buffer
-    memset(keyBuffer, 0, sizeof(keyBuffer));
-    keyBufferIndex = 0;
-  }
-  else if (entryStarted == false && isDigit(key))
-  { // Start of new entry
-    keyBufferIndex = 0;
-    entryStarted = true;
-    keyBuffer[keyBufferIndex] = key;
-    newEntry = false;
-    keyBufferIndex++;
-  }
-  else if (entryStarted == true && key != '#' && key != '*')
-  { // Continue entry
-    if (keyBufferIndex < 4 && isDigit(key))
-    {
-      keyBuffer[keyBufferIndex] = key;
-      keyBufferIndex++;
-      // Update LCD screen with entered track number for current selection
-      lcd.setCursor(row, currentSelection); // Adjust the cursor position as needed
-      lcd.print(key);
-      row++;
+    else if (key == '#')
+    { // End of entry
+        keyBuffer[keyBufferIndex] = '\0';
+        entryStarted = false;
+        newEntry = true;
     }
-  }
+    else if (key == '*' || key == 'A' || key == 'B' || key == 'C')
+    { // Action keys
+        if (keyBufferIndex > 0)
+        { // Check if a track number has been entered
+            switch (key)
+            {
+            case '*': // Play immediate
+                Serial.println(F(" play immediate"));
+                myDFPlayer.playFolder(1, atoi(keyBuffer)); // Assuming track numbers are in folder 1
+                break;
+            case 'A': // Add to sequence list
+                Serial.println(F(" add to list"));
+                addToSequenceList(atoi(keyBuffer));
+                break;
+            case 'B': // Play sequence
+                Serial.println(F(" play the sequence"));
+                playSequence();
+                break;
+            case 'C': // STOP sequence
+                Serial.println(F(" stop the playing"));
+                stopSequence();
+                break;
+            default:
+                break;
+            }
+        }
+        // Clear the buffer
+        memset(keyBuffer, 0, sizeof(keyBuffer));
+        keyBufferIndex = 0;
+    }
+    else if (entryStarted == false && isDigit(key))
+    { // Start of new entry
+        keyBufferIndex = 0;
+        entryStarted = true;
+        keyBuffer[keyBufferIndex] = key;
+        newEntry = false;
+        keyBufferIndex++;
+    }
+    else if (entryStarted == true && key != '#' && key != '*')
+    { // Continue entry
+        if (keyBufferIndex < 4 && isDigit(key))
+        {
+            keyBuffer[keyBufferIndex] = key;
+            keyBufferIndex++;
+            // Update LCD screen with entered track number for current selection
+            lcd.setCursor(row, currentSelection); // Adjust the cursor position as needed
+            lcd.print(key);
+            row++;
+        }
+    }
 }
 float entryToFloat(char *entry)
 {
-  return (atof(entry));
+    return (atof(entry));
 }
 int entryToInt(char *entry)
 {
-  return (atoi(entry));
+    return (atoi(entry));
 }
