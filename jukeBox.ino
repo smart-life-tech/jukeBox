@@ -20,6 +20,7 @@ const byte buttonPin = 8;
 const byte pinLed = 5;
 const byte ssRXPin = 11;
 const byte ssTXPin = 12;
+byte playIndex = 0;
 byte rowPins[ROWS] = {9, 8, 7, 6}; // connect to the row pinouts of the
 
 byte colPins[COLS] = {5, 4, 3, 2}; // connect to the column pinouts of the
@@ -64,14 +65,17 @@ void playSequence()
 {
     for (int i = 0; i < sequenceLength; i++)
     {
-        myDFPlayer.playFolder(1, sequenceList[i]); // Assuming track numbers are in folder 1
-        delay(1000);                               // Adjust delay as needed
+        // myDFPlayer.playFolder(1, sequenceList[i]); // Assuming track numbers are in folder 1
+        // delay(1000);                               // Adjust delay as needed
     }
 }
 
 // Function to stop the sequence
 void stopSequence()
 {
+    playList = false;
+    playIndex = 0;
+
     myDFPlayer.stop();
 }
 
@@ -103,6 +107,10 @@ void setup()
 }
 void loop()
 {
+    if (playList)
+    {
+        playTheList();
+    }
     if (mode == 0) // check for new key
     {
         key = keypad.getKey();
@@ -133,12 +141,8 @@ void loop()
             }
             // ###################################################
             newEntry = false;
-            playList = true;
+            //
             mode = 0;
-        }
-        if (playList)
-        {
-            // playTheList();
         }
     }
     else if (mode == 2) // is it new track
@@ -207,7 +211,7 @@ void loop()
     {
         if (keyBuffer[0] == 'B') // play list
         {
-            playList = true;
+            // playList = true;
             Serial.println(F("PLAY the listed tracks"));
             // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             lastBusyPinState = 0; // set up to restart the sequence.
@@ -241,21 +245,21 @@ void playTheList()
     unsigned long interval = 100;
     if (digitalRead(busyPin) == 0) // has it gone from low to high?, meaning the track finished
     {
-        Serial.print("music still playing ");
+        // Serial.print("music still playing ");
     }
     if (millis() - timer >= interval)
     {
         timer = millis();
-        static byte playIndex = 0;
+
         // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        bool busyPinState = digitalRead(busyPin); // read the busy pin
-        if (busyPinState != lastBusyPinState)     // has it changed?
+        bool busyPinState = digitalRead(busyPin);                           // read the busy pin
+        if (busyPinState != lastBusyPinState && playIndex < sequenceLength) // has it changed?
         {
             if (busyPinState == 1) // has it gone from low to high?, meaning the track finished
             {
                 Serial.print("play index = ");
-                Serial.println(playIndex);
-                myDFPlayer.play(trackList[playIndex]);
+                Serial.println(sequenceLength);
+                myDFPlayer.play(sequenceList[sequenceLength]);
                 playIndex++;        // next track
                 if (playIndex >= 3) // last track?
                 {
@@ -293,7 +297,7 @@ void getEntry(char key)
             memset(keyBuffer, 0, sizeof(keyBuffer));
             keyBufferIndex = 0;
 
-            Serial.print(F("\t\t"));
+            // Serial.print(F("\t\t"));
             Serial.print(keyBuffer[keyBufferIndex - 1]);
             Serial.println(F(" deleted"));
             keyBufferIndex--;
@@ -322,6 +326,7 @@ void getEntry(char key)
                 break;
             case 'B': // Play sequence
                 Serial.println(F(" play the sequence"));
+                playList = true;
                 playSequence();
                 break;
             case 'C': // STOP sequence
