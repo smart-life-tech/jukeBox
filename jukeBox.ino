@@ -267,7 +267,8 @@ void playTheList()
       if (busyPinState == 1) // has it gone from low to high?, meaning the track finished
       {
         Serial.print("play index = ");
-        Serial.println(sequenceLength);
+        Serial.println(sequenceList[sequenceLength]);
+        
         myDFPlayer.play(sequenceList[sequenceLength]);
         playIndex++;        // next track
         if (playIndex >= 3) // last track?
