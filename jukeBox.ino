@@ -266,13 +266,15 @@ void playTheList()
     {
       if (busyPinState == 1) // has it gone from low to high?, meaning the track finished
       {
+        Serial.print("play number  = ");
+        Serial.println(sequenceList[playIndex]);
         Serial.print("play index = ");
-        Serial.println(sequenceList[sequenceLength]);
-        
+        Serial.println(playIndex);
         myDFPlayer.play(sequenceList[sequenceLength]);
-        playIndex++;        // next track
-        if (playIndex >= 3) // last track?
+        playIndex++;                     // next track
+        if (playIndex >= sequenceLength) // last track?
         {
+          sequenceLength = 0;
           playIndex = 0;      // reset list
           keyBuffer[0] = 'C'; // set up for stop mode
           mode = 6;           // call stop mode
