@@ -318,7 +318,7 @@ void getEntry(char key)
             {
             case '*': // Play immediate
                 Serial.println(F(" play immediate"));
-                myDFPlayer.playFolder(1, atoi(keyBuffer)); // Assuming track numbers are in folder 1
+                myDFPlayer.play(atoi(keyBuffer)); // Assuming track numbers are in folder 1
                 break;
             case 'A': // Add to sequence list
                 Serial.println(F(" add to list"));
