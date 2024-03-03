@@ -10,12 +10,11 @@ byte currentSelection = 1; // Tracks the current selection (1st, 2nd, 3rd)
 const byte ROWS = 4;       // four rows
 const byte COLS = 4;       // three columns
 char keys[ROWS][COLS] =
-{
-  {'1', '2', '3', 'A'},
-  {'4', '5', '6', 'B'},
-  {'7', '8', '9', 'C'},
-  {'*', '0', '#', 'D'}
-};
+    {
+        {'1', '2', '3', 'A'},
+        {'4', '5', '6', 'B'},
+        {'7', '8', '9', 'C'},
+        {'*', '0', '#', 'D'}};
 const byte busyPin = 10;
 const byte buttonPin = 8;
 const byte pinLed = 5;
@@ -115,8 +114,8 @@ void loop()
   key = keypad.getKey();
   if (key)
   {
-     Serial.print(F(" key code = "));
-     Serial.print(key);
+    Serial.print(F(" key code = "));
+    Serial.print(key);
     getEntry(key);
   }
   /*
@@ -314,7 +313,7 @@ void getEntry(char key)
       return;
     }
   }
-  else if (key == '#')
+  if (key == '#')
   { // End of entry
     keyBuffer[keyBufferIndex] = '\0';
     entryStarted = false;
@@ -326,30 +325,33 @@ void getEntry(char key)
     { // Check if a track number has been entered
       switch (key)
       {
-        case '*': // Play immediate
-          Serial.println(F(" play immediate"));
-          myDFPlayer.play( atoi(keyBuffer)); // Assuming track numbers are in folder 1
-          break;
-        case 'A': // Add to sequence list
-          Serial.println(F(" add to list"));
-          addToSequenceList(atoi(keyBuffer));
-          break;
-        case 'B': // Play sequence
-          Serial.println(F(" play the sequence"));
-          playList = true;
-          playSequence();
-          break;
-        case 'C': // STOP sequence
-          Serial.println(F(" stop the playing"));
-          stopSequence();
-          break;
-        default:
-          break;
+      case '*': // Play immediate
+        Serial.println(F(" play immediate"));
+        myDFPlayer.play(atoi(keyBuffer)); // Assuming track numbers are in folder 1
+        keyBufferIndex = 0;
+        break;
+      case 'A': // Add to sequence list
+        Serial.println(F(" add to list"));
+        addToSequenceList(atoi(keyBuffer));
+        // keyBufferIndex = 0;
+        break;
+      case 'B': // Play sequence
+        Serial.println(F(" play the sequence"));
+        playList = true;
+        keyBufferIndex = 0;
+        playSequence();
+        break;
+      case 'C': // STOP sequence
+        Serial.println(F(" stop the playing"));
+        keyBufferIndex = 0;
+        stopSequence();
+        break;
+      default:
+        break;
       }
     }
     // Clear the buffer
     memset(keyBuffer, 0, sizeof(keyBuffer));
-    keyBufferIndex = 0;
   }
   else if (entryStarted == false && isDigit(key))
   { // Start of new entry
