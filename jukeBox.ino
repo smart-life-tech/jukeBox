@@ -5,16 +5,17 @@
 #include <hd44780.h> // main hd44780 header
 #include <hd44780ioClass/hd44780_I2Cexp.h>
 hd44780_I2Cexp lcd;
-int row = 15;
+int row = 16;
 byte currentSelection = 1; // Tracks the current selection (1st, 2nd, 3rd)
 const byte ROWS = 4;       // four rows
 const byte COLS = 4;       // three columns
 char keys[ROWS][COLS] =
-    {
-        {'1', '2', '3', 'A'},
-        {'4', '5', '6', 'B'},
-        {'7', '8', '9', 'C'},
-        {'*', '0', '#', 'D'}};
+{
+  {'1', '2', '3', 'A'},
+  {'4', '5', '6', 'B'},
+  {'7', '8', '9', 'C'},
+  {'*', '0', '#', 'D'}
+};
 const byte busyPin = 10;
 const byte buttonPin = 8;
 const byte pinLed = 5;
@@ -22,7 +23,7 @@ const byte ssRXPin = 11;
 const byte ssTXPin = 12;
 byte playIndex = 0;
 byte rowPins[ROWS] = {9, 8, 7, 6}; // connect to the row pinouts of the
-
+byte keyBufferIndex = 0;
 byte colPins[COLS] = {5, 4, 3, 2}; // connect to the column pinouts of the
 
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
@@ -291,12 +292,22 @@ void playTheList()
 void getEntry(char key)
 {
   static boolean entryStarted = false;
-  static byte keyBufferIndex = 0;
+  
+  /*
+    if (entryStarted == false && isDigit(key))
+    { // Start of new entry
+      keyBufferIndex = 0;
+      entryStarted = true;
+      keyBuffer[keyBufferIndex] = key;
+      newEntry = false;
+      keyBufferIndex++;
+    }
+  */
   // Increment current selection or wrap back to 1
   if (key == 'A' || key == 'C')
   {
     currentSelection++;
-    row = 15;
+    row = 16;
     if (currentSelection > 3)
     {
       currentSelection = 1;
@@ -328,45 +339,41 @@ void getEntry(char key)
     { // Check if a track number has been entered
       switch (key)
       {
-      case '*': // Play immediate
-        Serial.println(F(" play immediate"));
-        myDFPlayer.play(atoi(keyBuffer)); // Assuming track numbers are in folder 1
-        keyBufferIndex = 0;
-        break;
-      case 'A': // Add to sequence list
-        Serial.println(F(" add to list"));
-        addToSequenceList(atoi(keyBuffer));
-        // keyBufferIndex = 0;
-        break;
-      case 'B': // Play sequence
-        Serial.println(F(" play the sequence"));
-        playList = true;
-        keyBufferIndex = 0;
-        playSequence();
-        break;
-      case 'C': // STOP sequence
-        Serial.println(F(" stop the playing"));
-        keyBufferIndex = 0;
-        stopSequence();
-        break;
-      default:
-        break;
+        case '*': // Play immediate
+          Serial.println(F(" play immediate"));
+          myDFPlayer.play(atoi(keyBuffer)); // Assuming track numbers are in folder 1
+          keyBufferIndex = 0;
+          // Clear the buffer
+          memset(keyBuffer, 0, sizeof(keyBuffer));
+          break;
+        case 'A': // Add to sequence list
+          Serial.println(F(" add to list"));
+          addToSequenceList(atoi(keyBuffer));
+          // Clear the buffer
+          memset(keyBuffer, 10, sizeof(keyBuffer));
+          // keyBufferIndex = 0;
+          break;
+        case 'B': // Play sequence
+          Serial.println(F(" playing the sequence"));
+          playList = true;
+          keyBufferIndex = 0;
+          playSequence();
+          break;
+        case 'C': // STOP sequence
+          Serial.println(F(" stop the playing"));
+          keyBufferIndex = 0;
+          stopSequence();
+          break;
+        default:
+          break;
       }
     }
-    // Clear the buffer
-    memset(keyBuffer, 0, sizeof(keyBuffer));
+
   }
-  else if (entryStarted == false && isDigit(key))
-  { // Start of new entry
-    keyBufferIndex = 0;
-    entryStarted = true;
-    keyBuffer[keyBufferIndex] = key;
-    newEntry = false;
-    keyBufferIndex++;
-  }
-  else if (entryStarted == true && key != '#' && key != '*')
+
+  else if (key != '#' && key != '*')
   { // Continue entry
-    if (keyBufferIndex < 4 && isDigit(key))
+    if (keyBufferIndex < 7 && isDigit(key))
     {
       keyBuffer[keyBufferIndex] = key;
       keyBufferIndex++;
