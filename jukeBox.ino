@@ -271,7 +271,7 @@ void playTheList()
         Serial.println(sequenceList[playIndex]);
         Serial.print("play index = ");
         Serial.println(playIndex);
-        myDFPlayer.play(sequenceList[sequenceLength]);
+        myDFPlayer.play(sequenceList[playIndex]);
         playIndex++;                     // next track
         if (playIndex >= sequenceLength) // last track?
         {
