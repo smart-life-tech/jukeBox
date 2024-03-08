@@ -373,7 +373,7 @@ void getEntry(char key)
   { // Continue entry
     if (keyBufferIndex < 9 && isDigit(key))
     {
-      if (row < 19)
+      if (row =< 19)
       {
         keyBuffer[keyBufferIndex] = key;
         keyBufferIndex++;
