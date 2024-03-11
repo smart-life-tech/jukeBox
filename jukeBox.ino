@@ -316,7 +316,7 @@ void getEntry(char key)
   { // Delete last key entry
     if (keyBufferIndex > 0)
     {
-      memset(keyBuffer, 0, sizeof(keyBuffer));
+     // memset(keyBuffer, 0, sizeof(keyBuffer));
       keyBufferIndex = 0;
       // Serial.print(F("\t\t"));
       Serial.print(sequenceList[sequenceLength]);
@@ -341,7 +341,7 @@ void getEntry(char key)
         lcd.setCursor(0, 3);
         lcd.print(" 3rd Selection <___> ");
       }
-      return;
+      //return;
     }
   }
   if (key == '#')
