@@ -318,11 +318,29 @@ void getEntry(char key)
     {
       memset(keyBuffer, 0, sizeof(keyBuffer));
       keyBufferIndex = 0;
-
       // Serial.print(F("\t\t"));
-      Serial.print(keyBuffer[keyBufferIndex - 1]);
+      Serial.print(sequenceList[sequenceLength]);
       Serial.println(F(" deleted"));
       keyBufferIndex--;
+
+      // Reset display
+      // sequenceList[sequenceLength] = trackNumber;
+      sequenceLength--;
+      if (currentSelection == 1)
+      {
+        lcd.setCursor(0, 1);
+        lcd.print(" 1st Selection <___> ");
+      }
+      else if (currentSelection == 2)
+      {
+        lcd.setCursor(0, 2);
+        lcd.print(" 2nd Selection <___> ");
+      }
+      else if (currentSelection == 3)
+      {
+        lcd.setCursor(0, 3);
+        lcd.print(" 3rd Selection <___> ");
+      }
       return;
     }
   }
@@ -373,7 +391,7 @@ void getEntry(char key)
   { // Continue entry
     if (keyBufferIndex < 9 && isDigit(key))
     {
-      if (row <= 18)//max length to go
+      if (row <= 18) // max length to go
       {
         keyBuffer[keyBufferIndex] = key;
         keyBufferIndex++;
