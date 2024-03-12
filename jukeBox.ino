@@ -387,7 +387,7 @@ void getEntry(char key)
     }
   }
 
-  else if (key != '#' && key != '*')
+  else if (key != '#' && key != '*'&& key != 'D')
   { // Continue entry
     if (keyBufferIndex < 9 && isDigit(key))
     {
