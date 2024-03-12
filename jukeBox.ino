@@ -320,7 +320,7 @@ void getEntry(char key)
       keyBufferIndex = 0;
       // Serial.print(F("\t\t"));
       Serial.print(sequenceList[sequenceLength]);
-      Serial.println(F(" deleted"));
+      Serial.println(F(" deleted trck"));
       keyBufferIndex--;
 
       // Reset display
