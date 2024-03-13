@@ -78,7 +78,18 @@ void stopSequence()
 
   myDFPlayer.stop();
 }
-
+void skipSequence()
+{
+  if (playIndex <= sequenceLength) // last track?
+  {
+    Serial.print("play next = ");
+    Serial.println(playIndex);
+    myDFPlayer.stop();
+    delay(1000);
+    playIndex++;
+    myDFPlayer.play(sequenceList[playIndex]);
+  }
+}
 void setup()
 {
   Serial.begin(115200);
@@ -167,7 +178,7 @@ void getEntry(char key)
   {
     Serial.println(F(" stop the playing"));
     keyBufferIndex = 0;
-    stopSequence();
+    skipSequence();
     playList = false;
   }
   // Increment current selection or wrap back to 1
