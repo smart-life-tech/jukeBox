@@ -86,8 +86,11 @@ void skipSequence()
     Serial.println(playIndex);
     myDFPlayer.stop();
     delay(1000);
-    //playIndex++;
-    myDFPlayer.play(sequenceList[playIndex]);
+    // playIndex++;
+    if (playIndex != sequenceLength) // last track?
+    {
+      myDFPlayer.play(sequenceList[playIndex]);
+    }
   }
 }
 void setup()
@@ -270,10 +273,10 @@ void getEntry(char key)
   { // Continue entry
     if (keyBufferIndex < 9 && isDigit(key))
     {
-      Serial.println("entry1");
+      // Serial.println("entry1");
       if (row <= 18) // max length to go
       {
-        Serial.println("entry2");
+        // Serial.println("entry2");
         keyBuffer[keyBufferIndex] = key;
         keyBufferIndex++;
         // Update LCD screen with entered track number for current selection
