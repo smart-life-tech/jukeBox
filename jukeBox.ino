@@ -163,9 +163,15 @@ void playTheList()
 void getEntry(char key)
 {
   static boolean entryStarted = false;
-
+  if (key == 'C' && playList == true)
+  {
+    Serial.println(F(" stop the playing"));
+    keyBufferIndex = 0;
+    stopSequence();
+    playList = false;
+  }
   // Increment current selection or wrap back to 1
-  if (key == 'A' || key == 'C')
+  if (key == 'A')
   {
     currentSelection++;
     row = 16;
@@ -187,7 +193,7 @@ void getEntry(char key)
 
       // Reset display
       // sequenceList[sequenceLength] = trackNumber;
-      //sequenceLength--;
+      // sequenceLength--;
       if (currentSelection == 1)
       {
         lcd.setCursor(0, 1);
