@@ -164,7 +164,7 @@ void playTheList()
           playIndex = 0;      // reset list
           keyBuffer[0] = 'C'; // set up for stop mode
           mode = 6;           // call stop mode
-          playList = false;
+          //playList = false;
         }
       }
       lastBusyPinState = busyPinState; // remember the last busy state
