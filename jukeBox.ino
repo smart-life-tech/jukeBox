@@ -86,7 +86,7 @@ void skipSequence()
     Serial.println(playIndex);
     myDFPlayer.stop();
     delay(1000);
-    playIndex++;
+    //playIndex++;
     myDFPlayer.play(sequenceList[playIndex]);
   }
 }
