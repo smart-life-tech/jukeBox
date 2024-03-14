@@ -80,59 +80,21 @@ void stopSequence()
 }
 void skipSequence()
 {
-  if (playIndex <= sequenceLength) // last track?
+  Serial.print("play next = ");
+  Serial.println(playIndex);
+  myDFPlayer.stop();
+  delay(1000);
+  // playIndex++;
+  Serial.print("play index");
+  Serial.println(playIndex);
+  Serial.print("sequence index");
+  Serial.println(sequenceLength);
+  if (playIndex < sequenceLength + 1) // last track?
   {
-    Serial.print("play next = ");
-    Serial.println(playIndex);
-    myDFPlayer.stop();
-    delay(1000);
-    // playIndex++;
-    if (playIndex != sequenceLength) // last track?
-    {
-      myDFPlayer.play(sequenceList[playIndex]);
-    }
+    myDFPlayer.play(sequenceList[playIndex]);
   }
 }
-void setup()
-{
-  Serial.begin(115200);
-  Serial.print(F("Enter track number then enter action"));
-  Serial.println(F(" # = ENTER"));
-  Serial.println(F(" * = Play immediate"));
-  Serial.println(F(" A = Add to sequence list"));
-  Serial.println(F(" B = Play sequence"));
-  Serial.println(F("To add track 18 to the list, \"18A\""));
-  Serial.println(F("To play track 3 immediately, \"3*\""));
-  Serial.println(F(" C = STOP sequence"));
-  Serial.println(F("\n\n"));
-  mp3ss.begin(9600);
-  myDFPlayer.begin(mp3ss);
-  myDFPlayer.volume(20);
-  // myDFPlayer.play(3);
-  lcd.begin(20, 4);
-  lcd.clear(); // the only time that you should use clear
-  lcd.print(" Halloween Sounds ");
-  lcd.setCursor(0, 1);
-  lcd.print(" 1st Selection <___> ");
-  lcd.setCursor(0, 2);
-  lcd.print(" 2nd Selection <___>");
-  lcd.setCursor(0, 3);
-  lcd.print(" 3rd Selection <___>");
-}
-void loop()
-{
-  if (playList)
-  {
-    playTheList();
-  }
-  key = keypad.getKey();
-  if (key)
-  {
-    Serial.print(F(" key code = "));
-    Serial.print(key);
-    getEntry(key);
-  }
-}
+
 void playTheList()
 {
 
@@ -164,7 +126,7 @@ void playTheList()
           playIndex = 0;      // reset list
           keyBuffer[0] = 'C'; // set up for stop mode
           mode = 6;           // call stop mode
-          //playList = false;
+          // playList = false;
         }
       }
       lastBusyPinState = busyPinState; // remember the last busy state
@@ -181,8 +143,9 @@ void getEntry(char key)
   {
     Serial.println(F(" stop the playing"));
     keyBufferIndex = 0;
+    Serial.println(F(" skipping the track"));
     skipSequence();
-    playList = false;
+    // playList = false;
   }
   // Increment current selection or wrap back to 1
   if (key == 'A')
@@ -294,4 +257,45 @@ float entryToFloat(char *entry)
 int entryToInt(char *entry)
 {
   return (atoi(entry));
+}
+
+void setup()
+{
+  Serial.begin(115200);
+  Serial.print(F("Enter track number then enter action"));
+  Serial.println(F(" # = ENTER"));
+  Serial.println(F(" * = Play immediate"));
+  Serial.println(F(" A = Add to sequence list"));
+  Serial.println(F(" B = Play sequence"));
+  Serial.println(F("To add track 18 to the list, \"18A\""));
+  Serial.println(F("To play track 3 immediately, \"3*\""));
+  Serial.println(F(" C = STOP sequence"));
+  Serial.println(F("\n\n"));
+  mp3ss.begin(9600);
+  myDFPlayer.begin(mp3ss);
+  myDFPlayer.volume(20);
+  // myDFPlayer.play(3);
+  lcd.begin(20, 4);
+  lcd.clear(); // the only time that you should use clear
+  lcd.print(" Halloween Sounds ");
+  lcd.setCursor(0, 1);
+  lcd.print(" 1st Selection <___> ");
+  lcd.setCursor(0, 2);
+  lcd.print(" 2nd Selection <___>");
+  lcd.setCursor(0, 3);
+  lcd.print(" 3rd Selection <___>");
+}
+void loop()
+{
+  if (playList)
+  {
+    playTheList();
+  }
+  key = keypad.getKey();
+  if (key)
+  {
+    Serial.print(F(" key code = "));
+    Serial.print(key);
+    getEntry(key);
+  }
 }
