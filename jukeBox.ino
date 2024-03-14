@@ -89,7 +89,7 @@ void skipSequence()
   Serial.println(playIndex);
   Serial.print("sequence index");
   Serial.println(sequenceLength);
-  if (playIndex < sequenceLength + 1) // last track?
+  if (playIndex != sequenceLength) // last track?
   {
     myDFPlayer.play(sequenceList[playIndex]);
   }
