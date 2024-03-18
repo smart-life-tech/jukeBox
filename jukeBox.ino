@@ -85,7 +85,7 @@ void skipSequence()
   myDFPlayer.stop();
   delay(1000);
   // playIndex++;
-  Serial.print("play index");
+  Serial.print("play index number:");
   Serial.println(playIndex);
   Serial.print("sequence index");
   Serial.println(sequenceLength);
@@ -218,7 +218,7 @@ void getEntry(char key)
         playSequence();
         break;
       case 'C': // STOP sequence
-        Serial.println(F(" stop the playing"));
+        Serial.println(F(" stop the playings"));
         keyBufferIndex = 0;
        // stopSequence();
         break;
