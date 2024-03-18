@@ -220,7 +220,7 @@ void getEntry(char key)
       case 'C': // STOP sequence
         Serial.println(F(" stop the playing"));
         keyBufferIndex = 0;
-        stopSequence();
+       // stopSequence();
         break;
       default:
         break;
