@@ -114,6 +114,8 @@ void playTheList()
         Serial.println(sequenceList[playIndex]);
         Serial.print("play index = ");
         Serial.println(playIndex);
+        myDFPlayer.stop();
+        delay(1000);
         myDFPlayer.play(sequenceList[playIndex]);
         playIndex++;                     // next track
         if (playIndex >= sequenceLength) // last track?
@@ -220,7 +222,7 @@ void getEntry(char key)
       case 'C': // STOP sequence
         Serial.println(F(" stop the playings"));
         keyBufferIndex = 0;
-       // stopSequence();
+        // stopSequence();
         break;
       default:
         break;
