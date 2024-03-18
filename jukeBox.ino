@@ -83,11 +83,13 @@ void skipSequence()
   Serial.print("play next = ");
   Serial.println(playIndex);
   myDFPlayer.stop();
+  Serial.println( myDFPlayer.readState());
   delay(1000);
+   Serial.println( myDFPlayer.readState());
   // playIndex++;
-  Serial.print("play index number:");
+  Serial.print("play index number: ");
   Serial.println(playIndex);
-  Serial.print("sequence index");
+  Serial.print("sequence index : ");
   Serial.println(sequenceLength);
   if (playIndex != sequenceLength) // last track?
   {
@@ -122,7 +124,7 @@ void playTheList()
           playIndex = 0;      // reset list
           keyBuffer[0] = 'C'; // set up for stop mode
           mode = 6;           // call stop mode
-          // playList = false;
+          playList = false;
         }
       }
       lastBusyPinState = busyPinState; // remember the last busy state
