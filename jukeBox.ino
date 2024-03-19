@@ -24,7 +24,7 @@ byte playIndex = 0;
 byte rowPins[ROWS] = {9, 8, 7, 6}; // connect to the row pinouts of the
 byte keyBufferIndex = 0;
 byte colPins[COLS] = {5, 4, 3, 2}; // connect to the column pinouts of the
-
+bool cancel = false;
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 SoftwareSerial mp3ss(ssRXPin, ssTXPin); // RX, TX
 DFRobotDFPlayerMini myDFPlayer;
@@ -95,7 +95,20 @@ void skipSequence()
     myDFPlayer.play(sequenceList[playIndex]);
   }
 }
+void continuePlaying()
+{
+  bool busyPinState = digitalRead(busyPin); // read the busy pin
 
+  if (busyPinState && playIndex == 1 && cancel) // has it gone from low to high?, meaning the track finished
+  {
+    Serial.print("play numberss  = ");
+    Serial.println(sequenceList[playIndex]);
+    Serial.print("play indexss = ");
+    Serial.println(playIndex);
+    myDFPlayer.play(sequenceList[playIndex]);
+    cancel = false;
+  }
+}
 void playTheList()
 {
 
@@ -118,7 +131,7 @@ void playTheList()
         myDFPlayer.stop();
         delay(1000);
         myDFPlayer.play(sequenceList[playIndex]);
-        playIndex++;                     // next track
+        playIndex++;                    // next track
         if (playIndex > sequenceLength) // last track?
         {
           sequenceLength = 0;
@@ -144,6 +157,7 @@ void getEntry(char key)
     keyBufferIndex = 0;
     Serial.println(F(" skipping the track"));
     skipSequence();
+    cancel = true;
     // playList = false;
   }
   // Increment current selection or wrap back to 1
@@ -286,6 +300,7 @@ void setup()
 }
 void loop()
 {
+  continuePlaying();
   if (playList)
   {
     playTheList();
