@@ -73,10 +73,9 @@ void playSequence()
 // Function to stop the sequence
 void stopSequence()
 {
-  playList = false;
-  playIndex = 0;
-
-  myDFPlayer.stop();
+  playList = true;
+  keyBufferIndex = 0;
+  playSequence();
 }
 
 void skipSequence()
@@ -93,7 +92,8 @@ void skipSequence()
   if (playIndex != sequenceLength) // last track?
   {
     myDFPlayer.play(sequenceList[playIndex]);
-    playIndex++;
+    //playIndex++;
+    playList = true;
   }
 }
 void continuePlaying()
@@ -102,10 +102,10 @@ void continuePlaying()
 
   if (busyPinState && playIndex == 2 && cancel) // has it gone from low to high?, meaning the track finished
   {
-    //playIndex++;
-    Serial.print("play numberss  = ");
+    // playIndex++;
+    Serial.print("play number continue  = ");
     Serial.println(sequenceList[playIndex]);
-    Serial.print("play indexss = ");
+    Serial.print("play index continue = ");
     Serial.println(playIndex);
     myDFPlayer.play(sequenceList[playIndex]);
     cancel = false;
@@ -240,7 +240,7 @@ void getEntry(char key)
       case 'C': // STOP sequence
         Serial.println(F(" stop the playings"));
         keyBufferIndex = 0;
-        // stopSequence();
+        stopSequence();
         break;
       default:
         break;
