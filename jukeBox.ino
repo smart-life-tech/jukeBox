@@ -99,8 +99,9 @@ void continuePlaying()
 {
   bool busyPinState = digitalRead(busyPin); // read the busy pin
 
-  if (busyPinState && playIndex == 1 && cancel) // has it gone from low to high?, meaning the track finished
+  if (busyPinState && playIndex == 2 && cancel) // has it gone from low to high?, meaning the track finished
   {
+    playIndex++;
     Serial.print("play numberss  = ");
     Serial.println(sequenceList[playIndex]);
     Serial.print("play indexss = ");
@@ -139,6 +140,7 @@ void playTheList()
           keyBuffer[0] = 'C'; // set up for stop mode
           mode = 6;           // call stop mode
           playList = false;
+          cancel = false;
         }
       }
       lastBusyPinState = busyPinState; // remember the last busy state
