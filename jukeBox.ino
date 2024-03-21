@@ -82,7 +82,7 @@ void skipSequence()
 {
   Serial.print("play next = ");
   Serial.println(playIndex);
-  myDFPlayer.stop();
+  // myDFPlayer.stop();
   delay(1000);
   // playIndex++;
   Serial.print("play index number: ");
