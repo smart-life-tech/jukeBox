@@ -100,7 +100,7 @@ void continuePlaying()
 {
   bool busyPinState = digitalRead(busyPin); // read the busy pin
 
-  if (busyPinState && playIndex == 2 && cancel) // has it gone from low to high?, meaning the track finished
+  if (busyPinState && playIndex == 1 && cancel) // has it gone from low to high?, meaning the track finished
   {
     // playIndex++;
     Serial.print("play number continue  = ");
