@@ -144,7 +144,7 @@ void playTheList()
           cancel = false;
         }
         Serial.print("still playing");
-        Serial.println(playIndex)
+        Serial.println(playIndex);
       }
       lastBusyPinState = busyPinState; // remember the last busy state
 
