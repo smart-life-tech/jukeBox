@@ -100,7 +100,7 @@ void continuePlaying()
 {
   bool busyPinState = digitalRead(busyPin); // read the busy pin
 
-  if (busyPinState && playIndex == 2 && cancel) // has it gone from low to high?, meaning the track finished
+  if (busyPinState == 1 && playIndex == 1 && cancel) // has it gone from low to high?, meaning the track finished
   {
     // playIndex++;
     Serial.print("play number continue  = ");
@@ -126,15 +126,15 @@ void playTheList()
     {
       if (busyPinState == 1) // has it gone from low to high?, meaning the track finished
       {
-        Serial.print("play number  = ");
+        Serial.print("playing number  = ");
         Serial.println(sequenceList[playIndex]);
-        Serial.print("play index = ");
+        Serial.print("song index = ");
         Serial.println(playIndex);
-        myDFPlayer.stop();
-        delay(1000);
+        // myDFPlayer.stop();
+        // delay(1000);
         myDFPlayer.play(sequenceList[playIndex]);
-        playIndex++;                    // next track
-        if (playIndex > sequenceLength) // last track?
+        playIndex++;                        // next track
+        if (playIndex > sequenceLength + 2) // last track?
         {
           sequenceLength = 0;
           playIndex = 0;      // reset list
@@ -143,7 +143,7 @@ void playTheList()
           playList = false;
           cancel = false;
         }
-        Serial.print("still playing");
+        Serial.print("still playing next: ");
         Serial.println(playIndex);
       }
       lastBusyPinState = busyPinState; // remember the last busy state
