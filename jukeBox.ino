@@ -92,7 +92,7 @@ void skipSequence()
   if (playIndex != sequenceLength) // last track?
   {
     myDFPlayer.play(sequenceList[playIndex]);
-    //playIndex++;
+    // playIndex++;
     playList = true;
   }
 }
@@ -100,7 +100,7 @@ void continuePlaying()
 {
   bool busyPinState = digitalRead(busyPin); // read the busy pin
 
-  if (busyPinState && playIndex == 1 && cancel) // has it gone from low to high?, meaning the track finished
+  if (busyPinState && playIndex == 2 && cancel) // has it gone from low to high?, meaning the track finished
   {
     // playIndex++;
     Serial.print("play number continue  = ");
@@ -143,6 +143,8 @@ void playTheList()
           playList = false;
           cancel = false;
         }
+        Serial.print("still playing");
+        Serial.println(playIndex)
       }
       lastBusyPinState = busyPinState; // remember the last busy state
 
@@ -156,11 +158,12 @@ void getEntry(char key)
   static boolean entryStarted = false;
   if (key == 'C' && playList == true)
   {
+    cancel = true;
     Serial.println(F(" stop the playing"));
     keyBufferIndex = 0;
     Serial.println(F(" skipping the track"));
     skipSequence();
-    cancel = true;
+
     // playList = false;
   }
   // Increment current selection or wrap back to 1
@@ -303,12 +306,6 @@ void setup()
 }
 void loop()
 {
-
-  if (playList)
-  {
-    playTheList();
-  }
-  continuePlaying();
   key = keypad.getKey();
   if (key)
   {
@@ -316,4 +313,9 @@ void loop()
     Serial.print(key);
     getEntry(key);
   }
+  if (playList)
+  {
+    playTheList();
+  }
+  continuePlaying();
 }
