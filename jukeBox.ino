@@ -132,6 +132,7 @@ void playTheList()
         Serial.println(playIndex);
         // myDFPlayer.stop();
         // delay(1000);
+        myDFPlayer.reset();
         myDFPlayer.play(sequenceList[playIndex]);
         playIndex++;                        // next track
         if (playIndex > sequenceLength + 2) // last track?
