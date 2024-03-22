@@ -73,9 +73,9 @@ void playSequence()
 // Function to stop the sequence
 void stopSequence()
 {
-  playList = true;
+  // playList = true;
   keyBufferIndex = 0;
-  playSequence();
+  // playSequence();
 }
 
 void skipSequence()
@@ -90,22 +90,52 @@ void skipSequence()
   {
     myDFPlayer.play(sequenceList[playIndex]);
     playIndex++;
-    playList = true;
+    playList = false;
   }
 }
 void continuePlaying()
 {
   bool busyPinState = digitalRead(busyPin); // read the busy pin
 
-  if (busyPinState == 1 && playIndex == 2 && cancel) // has it gone from low to high?, meaning the track finished
+  if (busyPinState == 1 && playIndex == 1 && cancel) // has it gone from low to high?, meaning the track finished
   {
 
-    Serial.print("play number continue  = ");
+    Serial.print("play number continue 1  = ");
     Serial.println(sequenceList[playIndex]);
     Serial.print("play index continue = ");
     Serial.println(playIndex);
     myDFPlayer.play(sequenceList[playIndex]);
-    cancel = false;
+     playIndex++;
+  }
+  if (busyPinState == 1 && playIndex == 2 && cancel) // has it gone from low to high?, meaning the track finished
+  {
+
+    Serial.print("play number continue 2 = ");
+    Serial.println(sequenceList[playIndex]);
+    Serial.print("play index continue = ");
+    Serial.println(playIndex);
+    myDFPlayer.play(sequenceList[playIndex]);
+    playIndex++;
+  }
+    if (busyPinState == 1 && playIndex == 3 && cancel) // has it gone from low to high?, meaning the track finished
+  {
+
+    Serial.print("play number continue 3  = ");
+    Serial.println(sequenceList[playIndex]);
+    Serial.print("play index continue = ");
+    Serial.println(playIndex);
+    myDFPlayer.play(sequenceList[playIndex]);
+    // cancel = false;
+  }
+  if (busyPinState == 1 && playIndex == 2 && cancel) // has it gone from low to high?, meaning the track finished
+  {
+
+    Serial.print("play number continue 2 = ");
+    Serial.println(sequenceList[playIndex]);
+    Serial.print("play index continue = ");
+    Serial.println(playIndex);
+    myDFPlayer.play(sequenceList[playIndex]);
+    // cancel = false;
   }
 }
 void playTheList()
@@ -130,7 +160,7 @@ void playTheList()
         myDFPlayer.stop();
         delay(500);
         myDFPlayer.play(sequenceList[playIndex]);
-        playIndex++;                        // next track
+        playIndex++;                    // next track
         if (playIndex > sequenceLength) // last track?
         {
           sequenceLength = 0;
@@ -314,5 +344,6 @@ void loop()
   {
     playTheList();
   }
- // continuePlaying();
+  
+   continuePlaying();
 }
