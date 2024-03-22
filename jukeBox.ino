@@ -80,14 +80,11 @@ void stopSequence()
 
 void skipSequence()
 {
-  Serial.print("play next = ");
-  Serial.println(playIndex);
-  // myDFPlayer.stop();
   delay(1000);
   // playIndex++;
   Serial.print("play index number: ");
   Serial.println(playIndex);
-  Serial.print("sequence index : ");
+  Serial.print("sequence total number : ");
   Serial.println(sequenceLength);
   if (playIndex != sequenceLength) // last track?
   {
@@ -317,5 +314,5 @@ void loop()
   {
     playTheList();
   }
-  continuePlaying();
+ // continuePlaying();
 }
