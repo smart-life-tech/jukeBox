@@ -105,7 +105,7 @@ void continuePlaying()
     Serial.print("play index continue = ");
     Serial.println(playIndex);
     myDFPlayer.play(sequenceList[playIndex]);
-     playIndex++;
+    playIndex++;
   }
   if (busyPinState == 1 && playIndex == 2 && cancel) // has it gone from low to high?, meaning the track finished
   {
@@ -117,7 +117,7 @@ void continuePlaying()
     myDFPlayer.play(sequenceList[playIndex]);
     playIndex++;
   }
-    if (busyPinState == 1 && playIndex == 3 && cancel) // has it gone from low to high?, meaning the track finished
+  if (busyPinState == 1 && playIndex == 3 && cancel) // has it gone from low to high?, meaning the track finished
   {
 
     Serial.print("play number continue 3  = ");
@@ -183,7 +183,7 @@ void playTheList()
 void getEntry(char key)
 {
   static boolean entryStarted = false;
-  if (key == 'C' && playList == true)
+  if (key == 'C' && cancel == false)
   {
     cancel = true;
     Serial.println(F(" stop the playing"));
@@ -344,6 +344,6 @@ void loop()
   {
     playTheList();
   }
-  
-   continuePlaying();
+
+  continuePlaying();
 }
