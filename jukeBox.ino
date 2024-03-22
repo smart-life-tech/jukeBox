@@ -183,7 +183,7 @@ void playTheList()
 void getEntry(char key)
 {
   static boolean entryStarted = false;
-  if (key == 'C' && cancel == false)
+  if (key == 'C' && sequenceLength > 1)
   {
     cancel = true;
     Serial.println(F(" stop the playing"));
