@@ -5,6 +5,7 @@
 #include <hd44780.h> // main hd44780 header
 #include <hd44780ioClass/hd44780_I2Cexp.h>
 hd44780_I2Cexp lcd;
+bool done_playing = false;
 int row = 16;
 bool apressed = false;
 byte currentSelection = 1; // Tracks the current selection (1st, 2nd, 3rd)
@@ -131,7 +132,7 @@ void addToSequenceList(int trackNumber)
 // Function to play the sequence
 void playSequence()
 {
-    if (digitalRead(busyPin) == 1 && playIndex == 3)
+    if (digitalRead(busyPin) == 1 && playIndex == 3 && done_playing)
     { // has it gone from low to high?, meaning the track finished
         asm volatile("jmp 0x0000");
     }
@@ -142,6 +143,7 @@ void stopSequence()
     // playList = true;
     keyBufferIndex = 0;
     myDFPlayer.pause();
+    done_playing = true;
 }
 
 void skipSequence()
@@ -196,8 +198,12 @@ void continuePlaying()
         Serial.println(playIndex);
         myDFPlayer.play(sequenceList[playIndex]);
         // cancel = false;
+        playIndex++;
     }
-    playSequence();
+    if (busyPinState == 1 && playIndex == 4 && cancel) // has it gone from low to high?, meaning the track finished
+    {
+        playSequence();
+    }
 }
 void playTheList()
 {
@@ -230,6 +236,7 @@ void playTheList()
                     mode = 6;           // call stop mode
                     playList = false;
                     cancel = false;
+                    playSequence();
                 }
                 Serial.print("still playing next: ");
                 Serial.println(playIndex);
@@ -239,7 +246,6 @@ void playTheList()
             // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         }
     }
-    playSequence();
 }
 
 void getEntry(char key)
