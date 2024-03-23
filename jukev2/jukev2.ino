@@ -132,7 +132,7 @@ void addToSequenceList(int trackNumber)
 // Function to play the sequence
 void playSequence()
 {
-    if (digitalRead(busyPin) == 1 && playIndex == 3 && done_playing)
+    if (digitalRead(busyPin) == 1 && (playIndex == 3 || done_playing))
     { // has it gone from low to high?, meaning the track finished
         asm volatile("jmp 0x0000");
     }
