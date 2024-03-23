@@ -1,4 +1,4 @@
 {
     "board": "arduino:avr:uno",
-    "sketch": "jukeBox.ino"
+    "sketch": "jukev2\\jukev2.ino"
 }
