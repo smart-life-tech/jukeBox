@@ -64,9 +64,10 @@ void updateTrackBlink()
         // Update the LCD with the current blink state
         if (playList)
         {
-            lcd.setCursor(14, 1); // Assuming track number position
+            Serial.println("tstst");
+            lcd.setCursor(15, playIndex + 1); // Assuming track number position
             lcd.print(trackBlinkState ? "<" : " ");
-            lcd.setCursor(18, 1);
+            lcd.setCursor(19, playIndex + 1);
             lcd.print(trackBlinkState ? ">" : " ");
         }
     }
@@ -80,22 +81,18 @@ void updateSelectionBlink()
 
         // Toggle the blink state
         selectionBlinkState = !selectionBlinkState;
-        if (apressed)
-        {
-            selectionBlinkState = true; // regardless
-            apressed = false;
-        }
+
         if (!playList)
         {
             // Update the LCD with the current blink state
-            if (currentSelection == 1)
+            if (currentSelection == 1 && !apressed)
             {
                 lcd.setCursor(0, 1);
                 lcd.print(selectionBlinkState ? " 1st Selection " : "              ");
                 lcd.setCursor(0, 3);
                 lcd.print(" 3rd Selection ");
             }
-            else if (currentSelection == 2)
+            else if (currentSelection == 2 && !apressed)
             {
                 lcd.setCursor(0, 2);
                 lcd.print(selectionBlinkState ? " 2nd Selection " : "              ");
@@ -104,7 +101,7 @@ void updateSelectionBlink()
                 lcd.setCursor(0, 3);
                 lcd.print(" 3rd Selection ");
             }
-            else if (currentSelection == 3)
+            else if (currentSelection == 3 && !apressed)
             {
                 lcd.setCursor(0, 3);
                 lcd.print(selectionBlinkState ? " 3rd Selection " : "              ");
@@ -269,11 +266,18 @@ void getEntry(char key)
     if (key == 'A')
     {
         currentSelection++;
-        apressed = true;
+
         row = 16;
         if (currentSelection > 3)
         {
             currentSelection = 1;
+            lcd.setCursor(0, 3);
+            lcd.print(" 3rd Selection ");
+            apressed = true;
+            delay(1000);
+            lcd.clear();
+            lcd.setCursor(0, 1);
+            lcd.print("Press B to play all");
         }
     }
     if (key == 'D')
@@ -338,6 +342,25 @@ void getEntry(char key)
             case 'B': // Play sequence
                 Serial.println(F(" playing the sequence"));
                 playList = true;
+                lcd.clear();
+                lcd.print(" Halloween Sounds ");
+                lcd.setCursor(0, 1);
+                lcd.print(" 1st Selection <");
+                lcd.print(sequenceList[0]);
+                lcd.setCursor(19, 1);
+                lcd.print("> ");
+                lcd.setCursor(0, 2);
+                lcd.print(" 2nd Selection <");
+                lcd.print(sequenceList[1]);
+                lcd.setCursor(19, 2);
+                lcd.print("> ");
+
+                lcd.setCursor(0, 3);
+                lcd.print(" 3rd Selection <");
+                lcd.print(sequenceList[2]);
+                lcd.setCursor(19, 3);
+                lcd.print("> ");
+
                 keyBufferIndex = 0;
                 playSequence();
                 break;
