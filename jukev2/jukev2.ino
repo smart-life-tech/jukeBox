@@ -143,7 +143,7 @@ void stopSequence()
 {
     // playList = true;
     keyBufferIndex = 0;
-    // playSequence();
+    myDFPlayer.pause();
 }
 
 void skipSequence()
@@ -159,6 +159,10 @@ void skipSequence()
         myDFPlayer.play(sequenceList[playIndex]);
         playIndex++;
         playList = false;
+    }
+    else
+    {
+        stopSequence();
     }
 }
 void continuePlaying()
