@@ -62,11 +62,11 @@ void updateTrackBlink()
         trackBlinkState = !trackBlinkState;
 
         // Update the LCD with the current blink state
-        if (playList)
+        if (!digitalRead(busyPin)) // blink when its playing
         {
-            lcd.setCursor(15, playIndex ); // Assuming track number position
+            lcd.setCursor(15, playIndex); // Assuming track number position
             lcd.print(trackBlinkState ? "<" : " ");
-            lcd.setCursor(19, playIndex );
+            lcd.setCursor(19, playIndex);
             lcd.print(trackBlinkState ? ">" : " ");
         }
     }
