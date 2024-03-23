@@ -86,17 +86,17 @@ void updateSelectionBlink()
             if (currentSelection == 1)
             {
                 lcd.setCursor(0, 1);
-                lcd.print(selectionBlinkState ? " 1st Selection " : "            ");
+                lcd.print(selectionBlinkState ? " 1st Selection " : "              ");
             }
             else if (currentSelection == 2)
             {
                 lcd.setCursor(0, 2);
-                lcd.print(selectionBlinkState ? " 2nd Selection " : "            ");
+                lcd.print(selectionBlinkState ? " 2nd Selection " : "              ");
             }
             else if (currentSelection == 3)
             {
                 lcd.setCursor(0, 3);
-                lcd.print(selectionBlinkState ? " 3rd Selection " : "            ");
+                lcd.print(selectionBlinkState ? " 3rd Selection " : "              ");
             }
         }
     }
