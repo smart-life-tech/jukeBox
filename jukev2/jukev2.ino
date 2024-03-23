@@ -131,13 +131,11 @@ void addToSequenceList(int trackNumber)
 // Function to play the sequence
 void playSequence()
 {
-    for (int i = 0; i < sequenceLength; i++)
-    {
-        // myDFPlayer.playFolder(1, sequenceList[i]); // Assuming track numbers are in folder 1
-        // delay(1000);                               // Adjust delay as needed
+    if (digitalRead(busyPin) == 1 && playIndex == 3)
+    { // has it gone from low to high?, meaning the track finished
+        asm volatile("jmp 0x0000");
     }
 }
-
 // Function to stop the sequence
 void stopSequence()
 {
@@ -199,16 +197,7 @@ void continuePlaying()
         myDFPlayer.play(sequenceList[playIndex]);
         // cancel = false;
     }
-    if (busyPinState == 1 && playIndex == 2 && cancel) // has it gone from low to high?, meaning the track finished
-    {
-
-        Serial.print("play number continue 2 = ");
-        Serial.println(sequenceList[playIndex]);
-        Serial.print("play index continue = ");
-        Serial.println(playIndex);
-        myDFPlayer.play(sequenceList[playIndex]);
-        // cancel = false;
-    }
+    playSequence();
 }
 void playTheList()
 {
@@ -250,6 +239,7 @@ void playTheList()
             // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         }
     }
+    playSequence();
 }
 
 void getEntry(char key)
@@ -365,7 +355,7 @@ void getEntry(char key)
                 lcd.print("> ");
 
                 keyBufferIndex = 0;
-                playSequence();
+                // playSequence();
                 break;
             case 'C': // STOP sequence
                 Serial.println(F(" stop the playings"));
