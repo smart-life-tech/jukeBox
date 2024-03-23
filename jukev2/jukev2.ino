@@ -6,6 +6,7 @@
 #include <hd44780ioClass/hd44780_I2Cexp.h>
 hd44780_I2Cexp lcd;
 int row = 16;
+bool apressed = false;
 byte currentSelection = 1; // Tracks the current selection (1st, 2nd, 3rd)
 const byte ROWS = 4;       // four rows
 const byte COLS = 4;       // three columns
@@ -79,24 +80,38 @@ void updateSelectionBlink()
 
         // Toggle the blink state
         selectionBlinkState = !selectionBlinkState;
+        if (apressed)
+        {
+            selectionBlinkState = true; // regardless
+            apressed = false;
+        }
         if (!playList)
         {
-
             // Update the LCD with the current blink state
             if (currentSelection == 1)
             {
                 lcd.setCursor(0, 1);
                 lcd.print(selectionBlinkState ? " 1st Selection " : "              ");
+                lcd.setCursor(0, 3);
+                lcd.print(" 3rd Selection ");
             }
             else if (currentSelection == 2)
             {
                 lcd.setCursor(0, 2);
                 lcd.print(selectionBlinkState ? " 2nd Selection " : "              ");
+                lcd.setCursor(0, 1);
+                lcd.print(" 1st Selection ");
+                lcd.setCursor(0, 3);
+                lcd.print(" 3rd Selection ");
             }
             else if (currentSelection == 3)
             {
                 lcd.setCursor(0, 3);
                 lcd.print(selectionBlinkState ? " 3rd Selection " : "              ");
+                lcd.setCursor(0, 1);
+                lcd.print(" 1st Selection ");
+                lcd.setCursor(0, 2);
+                lcd.print(" 2nd Selection ");
             }
         }
     }
@@ -254,6 +269,7 @@ void getEntry(char key)
     if (key == 'A')
     {
         currentSelection++;
+        apressed = true;
         row = 16;
         if (currentSelection > 3)
         {
@@ -315,6 +331,7 @@ void getEntry(char key)
                 Serial.println(F(" add to list"));
                 addToSequenceList(atoi(keyBuffer));
                 // Clear the buffer
+
                 memset(keyBuffer, 10, sizeof(keyBuffer));
                 // keyBufferIndex = 0;
                 break;
