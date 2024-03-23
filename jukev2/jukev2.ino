@@ -64,10 +64,9 @@ void updateTrackBlink()
         // Update the LCD with the current blink state
         if (playList)
         {
-            Serial.println("tstst");
-            lcd.setCursor(15, playIndex + 1); // Assuming track number position
+            lcd.setCursor(15, playIndex ); // Assuming track number position
             lcd.print(trackBlinkState ? "<" : " ");
-            lcd.setCursor(19, playIndex + 1);
+            lcd.setCursor(19, playIndex );
             lcd.print(trackBlinkState ? ">" : " ");
         }
     }
