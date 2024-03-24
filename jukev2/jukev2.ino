@@ -8,6 +8,7 @@ hd44780_I2Cexp lcd;
 bool done_playing = false;
 int row = 16;
 bool apressed = false;
+bool pause_play = true;
 byte currentSelection = 1; // Tracks the current selection (1st, 2nd, 3rd)
 const byte ROWS = 4;       // four rows
 const byte COLS = 4;       // three columns
@@ -290,6 +291,24 @@ void getEntry(char key)
 
         // playList = false;
     }
+    if (key == '#')
+    {
+
+        if (pause_play)
+        {
+            Serial.println(F(" pause the playing"));
+            myDFPlayer.pause();
+        }
+        else
+        {
+            if (playList || cancel)
+            {
+                Serial.println(F(" continue playing  the track"));
+                myDFPlayer.start();
+            }
+        }
+        pause_play = !pause_play;
+    }
     // Increment current selection or wrap back to 1
     if (key == 'A')
     {
@@ -406,7 +425,7 @@ void getEntry(char key)
         }
     }
 
-    else if (key != '#' && key != '*' && key != 'D')
+    else if (key != '*' && key != 'D')
     { // Continue entry
         if (keyBufferIndex < 9 && isDigit(key))
         {
