@@ -240,8 +240,7 @@ void playTheList()
                 {
                     done_playing = true;
                     delay(1000);
-                    playSequence();
-                }
+                                }
                 Serial.print("still playing next: ");
                 Serial.println(playIndex);
             }
@@ -249,6 +248,7 @@ void playTheList()
 
             // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         }
+        playSequence();
     }
 }
 
