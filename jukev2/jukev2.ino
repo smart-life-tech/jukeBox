@@ -227,7 +227,7 @@ void playTheList()
                 delay(500);
                 myDFPlayer.play(sequenceList[playIndex]);
                 playIndex++;                    // next track
-                if (playIndex > sequenceLength) // last track?
+                if (playIndex >= sequenceLength) // last track?
                 {
                     sequenceLength = 0;
                     playIndex = 0;      // reset list
