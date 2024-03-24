@@ -236,6 +236,9 @@ void playTheList()
                     playList = false;
                     cancel = false;
                     done_playing = true;
+                }
+                if (playIndex == 3)
+                {
                     playSequence();
                 }
                 Serial.print("still playing next: ");
