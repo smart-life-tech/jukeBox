@@ -298,6 +298,7 @@ void getEntry(char key)
         {
             Serial.println(F(" pause the playing"));
             myDFPlayer.pause();
+            pause_play = false;
         }
         else
         {
@@ -305,9 +306,11 @@ void getEntry(char key)
             {
                 Serial.println(F(" continue playing  the track"));
                 myDFPlayer.start();
+                pause_play = true;
+                delay(1000);
             }
         }
-        pause_play = !pause_play;
+        // pause_play = !pause_play;
     }
     // Increment current selection or wrap back to 1
     if (key == 'A')
