@@ -356,6 +356,9 @@ void getEntry(char key)
                 Serial.println(F(" play immediate"));
                 myDFPlayer.play(atoi(keyBuffer)); // Assuming track numbers are in folder 1
                 keyBufferIndex = 0;
+                delay(1000);
+                playIndex = 4;
+                cancel = true;
                 // Clear the buffer
                 memset(keyBuffer, 0, sizeof(keyBuffer));
                 break;
