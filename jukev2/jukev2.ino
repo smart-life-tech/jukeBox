@@ -235,10 +235,10 @@ void playTheList()
                     mode = 6;           // call stop mode
                     playList = false;
                     cancel = false;
-                    done_playing = true;
                 }
                 if (playIndex == 3)
                 {
+                    done_playing = true;
                     playSequence();
                 }
                 Serial.print("still playing next: ");
