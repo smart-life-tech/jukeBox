@@ -359,12 +359,6 @@ void getEntry(char key)
             // return;
         }
     }
-    if (key == '#')
-    { // End of entry
-        keyBuffer[keyBufferIndex] = '\0';
-        entryStarted = false;
-        newEntry = true;
-    }
     else if (key == '*' || key == 'A' || key == 'B' || key == 'C')
     { // Action keys
         if (keyBufferIndex > 0)
@@ -487,12 +481,14 @@ void loop()
         Serial.print(key);
         getEntry(key);
     }
-    if (playList)
+    if (playList && pause_play)
     {
         playTheList();
     }
-
-    continuePlaying();
+    if (pause_play)
+    {
+        continuePlaying();
+    }
     updateSelectionBlink();
     updateTrackBlink();
 }
