@@ -65,10 +65,35 @@ void updateTrackBlink()
         // Update the LCD with the current blink state
         if (!digitalRead(busyPin)) // blink when its playing
         {
-            lcd.setCursor(15, playIndex); // Assuming track number position
-            lcd.print(trackBlinkState ? "<" : " ");
-            lcd.setCursor(19, playIndex);
-            lcd.print(trackBlinkState ? ">" : " ");
+            if (playIndex == 1)
+            {
+                lcd.setCursor(15, playIndex); // Assuming track number position
+                lcd.print(trackBlinkState ? "<" : " ");
+                lcd.setCursor(19, playIndex);
+                lcd.print(trackBlinkState ? ">" : " ");
+            }
+            else if (playIndex == 2)
+            {
+                lcd.setCursor(15, 1); // Assuming track number position
+                lcd.print("<");
+                lcd.setCursor(19, 1);
+                lcd.print(">");
+                lcd.setCursor(15, playIndex); // Assuming track number position
+                lcd.print(trackBlinkState ? "<" : " ");
+                lcd.setCursor(19, playIndex);
+                lcd.print(trackBlinkState ? ">" : " ");
+            }
+            else if (playIndex == 3)
+            {
+                lcd.setCursor(15, 2); // Assuming track number position
+                lcd.print("<");
+                lcd.setCursor(19, 2);
+                lcd.print(">");
+                lcd.setCursor(15, playIndex); // Assuming track number position
+                lcd.print(trackBlinkState ? "<" : " ");
+                lcd.setCursor(19, playIndex);
+                lcd.print(trackBlinkState ? ">" : " ");
+            }
         }
     }
 }
@@ -240,7 +265,7 @@ void playTheList()
                 {
                     done_playing = true;
                     delay(1000);
-                                }
+                }
                 Serial.print("still playing next: ");
                 Serial.println(playIndex);
             }
