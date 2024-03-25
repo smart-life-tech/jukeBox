@@ -9,6 +9,7 @@ bool done_playing = false;
 int row = 16;
 bool apressed = false;
 bool pause_play = true;
+bool playImmediate = false;
 byte currentSelection = 1; // Tracks the current selection (1st, 2nd, 3rd)
 const byte ROWS = 4;       // four rows
 const byte COLS = 4;       // three columns
@@ -291,6 +292,14 @@ void getEntry(char key)
 
         // playList = false;
     }
+    if (key == 'C' && playImmediate)
+    {
+        cancel = true;
+        Serial.println(F(" stop the playing"));
+        asm volatile("jmp 0x0000");
+
+        // playList = false;
+    }
     if (key == '#')
     {
 
@@ -370,6 +379,7 @@ void getEntry(char key)
             {
             case '*': // Play immediate
                 Serial.println(F(" play immediate"));
+                playImmediate=true;
                 myDFPlayer.play(atoi(keyBuffer)); // Assuming track numbers are in folder 1
                 keyBufferIndex = 0;
                 delay(1000);
