@@ -398,8 +398,11 @@ void getEntry(char key)
                 lcd.setCursor(0, 1);
                 lcd.print("                  ");
                 lcd.setCursor(0, 2);
-                lcd.print("Your selection <");
+                lcd.print("Your selection");
+                lcd.setCursor(15, 2);
+                lcd.print("<");
                 lcd.print(keyBuffer);
+                lcd.setCursor(19, 2);
                 lcd.print(">");
                 lcd.setCursor(0, 3);
                 lcd.print("                  ");
