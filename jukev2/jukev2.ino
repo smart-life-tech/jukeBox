@@ -96,6 +96,13 @@ void updateTrackBlink()
                 lcd.setCursor(19, playIndex);
                 lcd.print(trackBlinkState ? ">" : " ");
             }
+            if (playImmediate)
+            {
+                lcd.setCursor(15, 2); // Assuming track number position
+                lcd.print(trackBlinkState ? "<" : " ");
+                lcd.setCursor(19, 2);
+                lcd.print(trackBlinkState ? ">" : " ");
+            }
         }
     }
 }
@@ -109,7 +116,7 @@ void updateSelectionBlink()
         // Toggle the blink state
         selectionBlinkState = !selectionBlinkState;
 
-        if (!playList)
+        if (!playList && !playImmediate)
         {
             // Update the LCD with the current blink state
             if (currentSelection == 1 && !apressed)
@@ -388,6 +395,14 @@ void getEntry(char key)
                 lcd.clear();
                 lcd.setCursor(0, 0);
                 lcd.print("Pause=# Reject=C");
+                lcd.setCursor(0, 1);
+                lcd.print("                  ");
+                lcd.setCursor(0, 2);
+                lcd.print("Your selection <");
+                lcd.print(keyBuffer);
+                lcd.print(">");
+                lcd.setCursor(0, 3);
+                lcd.print("                  ");
                 // Clear the buffer
                 memset(keyBuffer, 0, sizeof(keyBuffer));
                 break;
