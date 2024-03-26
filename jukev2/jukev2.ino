@@ -379,12 +379,15 @@ void getEntry(char key)
             {
             case '*': // Play immediate
                 Serial.println(F(" play immediate"));
-                playImmediate=true;
+                playImmediate = true;
                 myDFPlayer.play(atoi(keyBuffer)); // Assuming track numbers are in folder 1
                 keyBufferIndex = 0;
                 delay(1000);
                 playIndex = 4;
                 cancel = true;
+                lcd.clear();
+                lcd.setCursor(0, 0);
+                lcd.print("Pause=# Reject=C");
                 // Clear the buffer
                 memset(keyBuffer, 0, sizeof(keyBuffer));
                 break;
