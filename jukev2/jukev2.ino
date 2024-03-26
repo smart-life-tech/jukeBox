@@ -505,6 +505,7 @@ void setup()
     lcd.print(" 2nd Selection <___>");
     lcd.setCursor(0, 3);
     lcd.print(" 3rd Selection <___>");
+    pinMode(busyPin, INPUT);
 }
 void loop()
 {
