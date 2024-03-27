@@ -1,4 +1,4 @@
 {
     "board": "arduino:avr:uno",
-    "sketch": "jukev2\\jukev2.ino"
+    "sketch": "ledjuke\\ledjuke.ino"
 }
