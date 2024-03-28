@@ -148,6 +148,7 @@ void updateTrackBlink()
         }
     }
 }
+
 void updateSelectionBlink()
 {
     // Check if it's time to toggle the blink state
@@ -189,6 +190,7 @@ void updateSelectionBlink()
         }
     }
 }
+
 void addToSequenceList(int trackNumber)
 {
     if (sequenceLength < MAX_SEQUENCE_LENGTH)
@@ -240,6 +242,7 @@ void skipSequence()
         stopSequence();
     }
 }
+
 void continuePlaying()
 {
     bool busyPinState = digitalRead(busyPin); // read the busy pin
@@ -280,6 +283,7 @@ void continuePlaying()
         playSequence();
     }
 }
+
 void playTheList()
 {
 
@@ -513,10 +517,12 @@ void getEntry(char key)
         }
     }
 }
+
 float entryToFloat(char *entry)
 {
     return (atof(entry));
 }
+
 int entryToInt(char *entry)
 {
     return (atoi(entry));
@@ -563,6 +569,7 @@ void setup()
         pinMode(LED_PIN_GROUP3 + i, OUTPUT);
     }
 }
+
 void loop()
 {
     key = keypad.getKey();
