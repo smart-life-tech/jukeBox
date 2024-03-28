@@ -5,6 +5,16 @@
 #include <hd44780.h> // main hd44780 header
 #include <hd44780ioClass/hd44780_I2Cexp.h>
 hd44780_I2Cexp lcd;
+#define NUM_LEDS_GROUP1 2
+#define NUM_LEDS_GROUP2 8
+#define NUM_LEDS_GROUP3 10
+
+#define LED_PIN_GROUP1 16
+#define LED_PIN_GROUP2 18
+#define LED_PIN_GROUP3 26
+
+int oldSequence = 0;
+
 bool done_playing = false;
 int row = 16;
 bool apressed = false;
@@ -54,6 +64,38 @@ unsigned long blinkInterval = 500; // Blink interval in milliseconds
 bool trackBlinkState = false;
 unsigned long lastTrackBlinkTime = 0;
 unsigned long trackBlinkInterval = 500; // Blink interval in milliseconds
+
+void lightUpLEDs(int trackNumber)
+{
+    String trackString = String(trackNumber); // Convert track number to a string
+    trackString = String("000") + trackString;
+    trackString = trackString.substring(trackString.length() - 3);
+    // Turn off all LEDs
+    Serial.println(trackString);
+    for (int i = 0; i < NUM_LEDS_GROUP1; i++)
+    {
+        digitalWrite(LED_PIN_GROUP1 + i, LOW);
+    }
+    for (int i = 0; i < NUM_LEDS_GROUP2; i++)
+    {
+        digitalWrite(LED_PIN_GROUP2 + i, LOW);
+    }
+    for (int i = 0; i < NUM_LEDS_GROUP3; i++)
+    {
+        digitalWrite(LED_PIN_GROUP3 + i, LOW);
+    }
+
+    // Activate LEDs for each group based on the track number
+
+    digitalWrite(LED_PIN_GROUP1 + trackString.substring(0, 1).toInt(), HIGH);
+    // Group 2 LEDs
+
+    digitalWrite(LED_PIN_GROUP2 + trackString.substring(1, 2).toInt(), HIGH);
+
+    // Group 1 LEDs
+    digitalWrite(LED_PIN_GROUP3 + trackString.substring(2, 3).toInt(), HIGH);
+}
+
 void updateTrackBlink()
 {
     // Check if it's time to toggle the blink state
@@ -506,6 +548,20 @@ void setup()
     lcd.setCursor(0, 3);
     lcd.print(" 3rd Selection <___>");
     pinMode(busyPin, INPUT);
+    Serial.begin(115200);
+    // Set LED pins as OUTPUT
+    for (int i = 0; i < NUM_LEDS_GROUP1; i++)
+    {
+        pinMode(LED_PIN_GROUP1 + i, OUTPUT);
+    }
+    for (int i = 0; i < NUM_LEDS_GROUP2; i++)
+    {
+        pinMode(LED_PIN_GROUP2 + i, OUTPUT);
+    }
+    for (int i = 0; i < NUM_LEDS_GROUP3; i++)
+    {
+        pinMode(LED_PIN_GROUP3 + i, OUTPUT);
+    }
 }
 void loop()
 {
@@ -526,4 +582,11 @@ void loop()
     }
     updateSelectionBlink();
     updateTrackBlink();
+    if (oldSequence != sequenceList[playIndex])
+    {
+        oldSequence = sequenceList[playIndex];
+        Serial.print("sequence changing :");
+        Serial.println(sequenceList[playIndex]);
+        lightUpLEDs(sequenceList[playIndex]);
+    }
 }
